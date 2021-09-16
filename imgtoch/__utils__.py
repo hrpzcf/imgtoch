@@ -59,5 +59,5 @@ def makeImage(
         drawPanel.text((x, y), char, 0, imgFont)
         x += hIncrement
     if keepSize:
-        newImage.resize((imageWidth, imageHeight), Image.ANTIALIAS)
+        newImage = newImage.resize((imageWidth, imageHeight), Image.ANTIALIAS)
     newImage.save(savePath)
