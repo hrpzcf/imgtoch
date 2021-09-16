@@ -141,3 +141,4 @@ cython_debug/
 # Others
 .idea
 .vscode
+test.py
