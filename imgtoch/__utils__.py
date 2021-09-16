@@ -32,13 +32,12 @@ def makeImage(
     # 往图片写入字符时纵坐标的移动增量
     vIncrement = ftHeight + vertSep
     image = Image.open(imgPath).convert("L")
-    imageWidth, imageHeight = image.size
+    oldImgWidth, oldImgHeight = image.size
     if keepRatio:
         # 按字符的宽高(加分隔距离)比例来计算原图需要缩放的比例
-        imageHeight = round(hIncrement / vIncrement * imageHeight)
-    if scale != 1:
-        imageWidth = round(imageWidth * scale)
-        imageHeight = round(imageHeight * scale)
+        imageHeight = round(hIncrement / vIncrement * oldImgHeight)
+    imageWidth = round(oldImgWidth * scale)
+    imageHeight = round(oldImgHeight * scale)
     if keepRatio or scale != 1:
         image = image.resize((imageWidth, imageHeight), Image.NEAREST)
     lenChars, charList = len(CHARS), list()
@@ -59,5 +58,5 @@ def makeImage(
         drawPanel.text((x, y), char, 0, imgFont)
         x += hIncrement
     if keepSize:
-        newImage = newImage.resize((imageWidth, imageHeight), Image.ANTIALIAS)
+        newImage = newImage.resize((oldImgWidth, oldImgHeight), Image.ANTIALIAS)
     newImage.save(savePath)
