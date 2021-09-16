@@ -3,7 +3,7 @@
 from .__utils__ import makeImage
 
 NAME = "imgtoch"
-VERSIONNUM = 0, 0, 2
+VERSIONNUM = 0, 0, 3
 VERSION = ".".join(map(str, VERSIONNUM))
 AUTHOR = "hrpzcf"
 EMAIL = "hrpzcf@foxmail.com"
