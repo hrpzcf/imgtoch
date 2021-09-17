@@ -17,11 +17,11 @@ def makeImage(
     keepSize=False,
 ):
     if not (isinstance(horzSep, int) and isinstance(vertSep, int)):
-        raise TypeError("The char interval [horzSep], [vertSep] must be int.")
+        raise TypeError("字符的横向间隔及纵向间隔参数数据类型应为整数。")
     if not (0 <= horzSep <= 10 and 0 <= vertSep <= 10):
-        raise ValueError("The character interval must be between 0 and 10.")
+        raise ValueError("字符横向及纵向间隔参数值大小应在 0 与 10 之间。")
     if not isinstance(scale, (int, float)) or (not 0 < scale <= 1):
-        raise ValueError("The zoom ratio [scale] must be a number > 0 and <= 1.")
+        raise ValueError("缩放比例参数的值大小应大于 0 且小于等于 1 。")
     if fontPath:
         imgFont = ImageFont.truetype(fontPath, fontSize)
     else:
@@ -58,5 +58,5 @@ def makeImage(
         drawPanel.text((x, y), char, 0, imgFont)
         x += hIncrement
     if keepSize:
-        newImage = newImage.resize((oldImgWidth, oldImgHeight), Image.ANTIALIAS)
+        newImage = newImage.resize((oldImgWidth, oldImgHeight), Image.BICUBIC)
     newImage.save(savePath)
