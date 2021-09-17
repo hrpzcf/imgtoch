@@ -10,7 +10,7 @@ def makeImage(
     savePath: str,
     scale: float = 1,
     fontPath: str = "",
-    fontSize: int = 20,
+    fontSize: int = 14,
     horzSep=2,
     vertSep=2,
     keepRatio=True,
@@ -33,11 +33,11 @@ def makeImage(
     vIncrement = ftHeight + vertSep
     image = Image.open(imgPath).convert("L")
     oldImgWidth, oldImgHeight = image.size
-    if keepRatio:
-        # 按字符的宽高(加分隔距离)比例来计算原图需要缩放的比例
-        imageHeight = round(hIncrement / vIncrement * oldImgHeight)
     imageWidth = round(oldImgWidth * scale)
     imageHeight = round(oldImgHeight * scale)
+    if keepRatio:
+        # 按字符的宽高(加分隔距离)比例来计算原图需要缩放的比例
+        imageHeight = round(hIncrement / vIncrement * imageHeight)
     if keepRatio or scale != 1:
         image = image.resize((imageWidth, imageHeight), Image.NEAREST)
     lenChars, charList = len(CHARS), list()
@@ -57,6 +57,6 @@ def makeImage(
             y += vIncrement
         drawPanel.text((x, y), char, 0, imgFont)
         x += hIncrement
-    if keepSize:
+    if keepSize and (newWidth, newHeight) != (oldImgWidth, oldImgHeight):
         newImage = newImage.resize((oldImgWidth, oldImgHeight), Image.BICUBIC)
-    newImage.save(savePath)
+    newImage.save(savePath, "JPEG", quality=95)
