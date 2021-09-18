@@ -9,16 +9,31 @@ def makeImage(
     imgPath: str,
     savePath: str,
     scale: float = 1,
+    quality: int = 80,
     fontPath: str = "",
     fontSize: int = 14,
-    horzSep=2,
-    vertSep=2,
+    horzSep: int = 2,
+    vertSep: int = 2,
     keepRatio=True,
     keepSize=False,
 ):
+    """
+    ### 将图片转换为字符图片
+
+    参数 imgPath: str, 源图片的完整路径
+    参数 savePath: str, 生成的图片的保存路径，包括文件名
+    参数 scale: float, 采集率，大于 0 小于等于 1
+    参数 quality: int, 图片保存质量，大于 0 小于等于 100
+    参数 fontPath: str, 字体文件路径
+    参数 fontSize: int, 字号
+    参数 horzSep: int, 字符横向间隔
+    参数 vertSep： int, 字符纵向间隔
+    参数 keepRatio: bool, 生成的图片是否保持宽高比
+    参数 keepSize: bool, 生成的图片是否保持原像素大小
+    """
     if not (isinstance(horzSep, int) and isinstance(vertSep, int)):
         raise TypeError("字符的横向间隔及纵向间隔参数数据类型应为整数。")
-    if not (0 <= horzSep <= 10 and 0 <= vertSep <= 10):
+    if not ((0 <= horzSep <= 10) and (0 <= vertSep <= 10)):
         raise ValueError("字符横向及纵向间隔参数值大小应在 0 与 10 之间。")
     if not isinstance(scale, (int, float)) or (not 0 < scale <= 1):
         raise ValueError("缩放比例参数的值大小应大于 0 且小于等于 1 。")
@@ -59,4 +74,4 @@ def makeImage(
         x += hIncrement
     if keepSize and (newWidth, newHeight) != (oldImgWidth, oldImgHeight):
         newImage = newImage.resize((oldImgWidth, oldImgHeight), Image.BICUBIC)
-    newImage.save(savePath, "JPEG", quality=95)
+    newImage.save(savePath, quality=quality)
