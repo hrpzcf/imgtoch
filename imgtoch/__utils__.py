@@ -23,7 +23,7 @@ def makeImage(
 
     参数 imgPath: str, 源图片的完整路径
     参数 savePath: str, 生成的图片的保存路径，包括文件名
-    参数 chars: str, 用于图像的字符表，字符数应大于 1
+    参数 chars: str, 用于图像的字符表，字符数应大于 1，无需事先排序
     参数 scale: float, 采集率，大于 0 小于等于 1
     参数 quality: int, 图片保存质量，大于 0 小于等于 100
     参数 fontPath: str, 字体文件路径
@@ -88,7 +88,7 @@ def makeImage(
 
 def grayscaleOf(char: str, fontPath: str = "", fontSize: int = 14) -> Tuple[str, int]:
     """
-    ### 返回给定单字符在给定字体时的 (字符, 名义灰度值) 元组
+    ### 返回给定单字符在给定字体时的 (字符, 等效灰度值) 元组
 
     参数 char: str，单字符
     参数 fontPath: str，字体文件路径，可省略
@@ -117,7 +117,7 @@ def grayscaleOf(char: str, fontPath: str = "", fontSize: int = 14) -> Tuple[str,
 
 def sortByGrayscale(string: str, fontPath: str = "", fontSize: int = 14) -> list:
     """
-    ### 按字符的名义灰度值排序给定字符，返回按灰度值由低到高排序好的字符列表
+    ### 按字符的等效灰度值排序给定字符，返回按灰度值由低到高排序好的字符列表
 
     参数 string: str，想要排序的字符串
     参数 fontPath: str，字体文件路径，可省略
