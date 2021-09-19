@@ -35,52 +35,46 @@ def makeImage(
     """
     if chars is None:
         chars = "HdRQA#PXCFJIv?!+^-:. "
+    if not isinstance(chars, str):
+        raise TypeError("用于图像的字符表参数值类型必须是字符串类型。")
+    if len(chars) < 2:
+        raise ValueError("用于图像的字符表中字符个数不能少于 2 个。")
     if not isinstance(scale, (int, float)) or (not 0 < scale <= 1):
         raise ValueError("缩放比例参数的值大小应大于 0 且小于等于 1 。")
     if not (isinstance(horzSep, int) and isinstance(vertSep, int)):
         raise TypeError("字符的横向间隔及纵向间隔参数数据类型应为整数。")
     if not ((0 <= horzSep <= 10) and (0 <= vertSep <= 10)):
         raise ValueError("字符横向及纵向间隔参数值大小应在 0 与 10 之间。")
-    if not isinstance(chars, str):
-        raise TypeError("用于图像的字符表参数值类型必须是字符串类型。")
-    if len(chars) < 2:
-        raise ValueError("用于图像的字符表中字符个数不能少于 2 个。")
     if fontPath:
         imgFont = ImageFont.truetype(fontPath, fontSize)
     else:
         imgFont = ImageFont.load_default()
     chars = sortByGrayscale(chars, fontPath, fontSize)
-    ftWidth, ftHeight = imgFont.getsize(chars[0])
-    # 往图片写入字符时横坐标的移动增量
-    hIncrement = ftWidth + horzSep
-    # 往图片写入字符时纵坐标的移动增量
-    vIncrement = ftHeight + vertSep
+    fontWidth, fontHeight = imgFont.getsize(chars[0])
     image = Image.open(imgPath).convert("L")
     oldImgWidth, oldImgHeight = image.size
     imageWidth = round(oldImgWidth * scale)
     imageHeight = round(oldImgHeight * scale)
+    # 往图片写入字符时横坐标及纵坐标的移动增量
+    incrementX, incrementY = fontWidth + horzSep, fontHeight + vertSep
     if keepRatio:
         # 按字符的宽高(加分隔距离)比例来计算原图需要缩放的比例
-        imageHeight = round(hIncrement / vIncrement * imageHeight)
+        imageHeight = round(incrementX / incrementY * imageHeight)
     if keepRatio or scale != 1:
         image = image.resize((imageWidth, imageHeight), Image.NEAREST)
-    lenChars, charList = len(chars), list()
-    for y in range(imageHeight):
-        for x in range(imageWidth):
-            grayNum = image.getpixel((x, y))
-            charIndex = round((grayNum / 255) * (lenChars - 1))
-            charList.append(chars[charIndex])
-    newWidth = (ftWidth + horzSep) * imageWidth + horzSep
-    newHeight = (ftHeight + vertSep) * imageHeight + vertSep
+    newWidth = (fontWidth + horzSep) * imageWidth + horzSep
+    newHeight = (fontHeight + vertSep) * imageHeight + vertSep
     newImage = Image.new("L", (newWidth, newHeight), 255)
     drawPanel = ImageDraw.Draw(newImage)
-    x, y = horzSep, vertSep
-    for index, char in enumerate(charList):
-        if index != 0 and not (index % imageWidth):
-            x = horzSep
-            y += vIncrement
-        drawPanel.text((x, y), char, 0, imgFont)
-        x += hIncrement
+    pointX, pointY, lenChars = horzSep, vertSep, len(chars)
+    for y in range(imageHeight):
+        for x in range(imageWidth):
+            grayValue = image.getpixel((x, y))
+            charIndex = round(grayValue / 255 * (lenChars - 1))
+            drawPanel.text((pointX, pointY), chars[charIndex], 0, imgFont)
+            pointX += incrementX
+        pointX = horzSep
+        pointY += incrementY
     if keepSize and (newWidth, newHeight) != (oldImgWidth, oldImgHeight):
         newImage = newImage.resize((oldImgWidth, oldImgHeight), Image.BICUBIC)
     newImage.save(savePath, quality=quality)
@@ -104,15 +98,14 @@ def grayscaleOf(char: str, fontPath: str = "", fontSize: int = 14) -> Tuple[str,
         imgFont = ImageFont.load_default()
     else:
         imgFont = ImageFont.truetype(fontPath, fontSize)
-    ftSize = imgFont.getsize(char)
-    newImage = Image.new("L", ftSize, 255)
+    fontWidth, fontHeight = imgFont.getsize(char)
+    newImage = Image.new("L", (fontWidth, fontHeight), 255)
     drawPanel = ImageDraw.Draw(newImage)
     drawPanel.text((0, 0), char, 0, imgFont)
-    imgWidth, imgHeight = newImage.size
-    grayscaleNums = (
-        newImage.getpixel((x, y)) for x in range(imgWidth) for y in range(imgHeight)
+    grayscaleValues = (
+        newImage.getpixel((x, y)) for x in range(fontWidth) for y in range(fontHeight)
     )
-    return char, round(sum(grayscaleNums) / (imgWidth * imgHeight))
+    return char, round(sum(grayscaleValues) / (fontWidth * fontHeight))
 
 
 def sortByGrayscale(string: str, fontPath: str = "", fontSize: int = 14) -> list:
