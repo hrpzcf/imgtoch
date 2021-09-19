@@ -3,7 +3,7 @@
 from .__utils__ import grayscaleOf, makeImage, sortByGrayscale
 
 NAME = "imgtoch"
-VERSIONNUM = 0, 2, 1
+VERSIONNUM = 0, 2, 2
 VERSION = ".".join(map(str, VERSIONNUM))
 AUTHOR = "hrpzcf"
 EMAIL = "hrpzcf@foxmail.com"
