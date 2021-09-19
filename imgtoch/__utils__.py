@@ -27,14 +27,14 @@ def makeImage(
     参数 scale: float, 采集率，大于 0 小于等于 1
     参数 quality: int, 图片保存质量，大于 0 小于等于 100
     参数 fontPath: str, 字体文件路径
-    参数 fontSize: int, 字号
+    参数 fontSize: int, 字体大小
     参数 horzSep: int, 字符横向间隔
     参数 vertSep： int, 字符纵向间隔
     参数 keepRatio: bool, 生成的图片是否保持宽高比
     参数 keepSize: bool, 生成的图片是否保持原像素大小
     """
     if chars is None:
-        chars = "@#%*+=-:. "
+        chars = "HdRQA#PXCFJIv?!+^-:. "
     if not isinstance(scale, (int, float)) or (not 0 < scale <= 1):
         raise ValueError("缩放比例参数的值大小应大于 0 且小于等于 1 。")
     if not (isinstance(horzSep, int) and isinstance(vertSep, int)):
