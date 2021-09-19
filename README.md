@@ -12,7 +12,7 @@
 from imgtoch import makeImage
 
 makeImage(
-    "图片路径",
+    "源图片路径",
     "生成的图片保存路径",
     chars = None, # 用于图像的字符表，字符数应大于 1，无需手动按等效灰度值排序
     scale = 1, # 缩放比例，0 < scale <= 1，可省略
@@ -22,7 +22,7 @@ makeImage(
     horzSep = 2, # 字符横向间隔，可省略
     vertSep = 2, # 字符纵向间隔，可省略
     keepRatio=True, # 是否保持原比例。因字体高宽不一定相等，生成的图片高宽会变形，此项为 True 则抵消变形，可省略
-    keepSize=False, # 一个字符对应一个像素点，因字符有大小，所以生成的图片会比 scale 后的尺寸大，此项为 True 会将生成的图片缩放至符合 scale 后的尺寸，可省略
+    keepSize=False, # 一个字符对应一个像素点，因字符有大小，所以生成的图片尺寸会变化，此项为 True 会将生成的图片缩放至原图尺寸，可省略
 )
 ```
 
