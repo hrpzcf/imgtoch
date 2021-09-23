@@ -21,9 +21,18 @@ def makeImage(
     """
     ### 将图片转换为字符图片
 
+    小技巧 - 想要生成的图片中的字符能清晰可见：
+
+    参数scale不宜设置的过小，对于一般相片大小来说，0.2或0.3都不错
+
+    其次要指定字体路径fontPath(不然字体大小不生效)，将字体大小fontSize设置的大一点，比如80
+
+    最后参数keepSize应设置为False，这样，最终生成的图片会非常大，但把图片放大后字符也一样清晰
+    
+
     参数 imgPath: str, 源图片的完整路径
     参数 savePath: str, 生成的图片的保存路径，包括文件名
-    参数 chars: str, 用于图像的字符表，字符数应大于 1，无需事先排序
+    参数 chars: str, 用于图像的字符表，字符数应大于 1，无需手动按灰度值排序排序
     参数 scale: float, 采集率，大于 0 小于等于 1
     参数 quality: int, 图片保存质量，大于 0 小于等于 100
     参数 fontPath: str, 字体文件路径
@@ -36,15 +45,15 @@ def makeImage(
     if chars is None:
         chars = "HdRQA#PXCFJIv?!+^-:. "
     if not isinstance(chars, str):
-        raise TypeError("用于图像的字符表参数值类型必须是字符串类型。")
+        raise TypeError("参数chars的值的数据类型必须是字符串。")
     if len(chars) < 2:
-        raise ValueError("用于图像的字符表中字符个数不能少于 2 个。")
+        raise ValueError("参数chars的值中字符个数不能少于2个。")
     if not isinstance(scale, (int, float)) or (not 0 < scale <= 1):
-        raise ValueError("缩放比例参数的值大小应大于 0 且小于等于 1 。")
+        raise ValueError("参数scale的值应大于0且小于等于1。")
     if not (isinstance(horzSep, int) and isinstance(vertSep, int)):
-        raise TypeError("字符的横向间隔及纵向间隔参数数据类型应为整数。")
-    if not ((0 <= horzSep <= 10) and (0 <= vertSep <= 10)):
-        raise ValueError("字符横向及纵向间隔参数值大小应在 0 与 10 之间。")
+        raise TypeError("参数horzSep或vertSep的值数据类型应为整型。")
+    if not ((0 <= horzSep <= 30) and (0 <= vertSep <= 30)):
+        raise ValueError("参数horzSep或vertSep的值应在0与30之间。")
     if fontPath:
         imgFont = ImageFont.truetype(fontPath, fontSize)
     else:
@@ -122,6 +131,6 @@ def sortByGrayscale(string: str, fontPath: str = "", fontSize: int = 14) -> list
         raise TypeError("给定的参数值必须是字符串。")
     if len(string) <= 1:
         raise ValueError("空字符串或单字符无需排序。")
-    grayscaleNums = [grayscaleOf(s, fontPath, fontSize) for s in string]
-    grayscaleNums.sort(key=lambda x: x[1])
-    return [grayscaleTuple[0] for grayscaleTuple in grayscaleNums]
+    grayscaleValues = [grayscaleOf(s, fontPath, fontSize) for s in string]
+    grayscaleValues.sort(key=lambda x: x[1])
+    return [grayscaleTuple[0] for grayscaleTuple in grayscaleValues]
