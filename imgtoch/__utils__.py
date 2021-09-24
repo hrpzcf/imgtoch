@@ -43,7 +43,7 @@ def makeImage(
     参数 keepSize: bool, 生成的图片是否保持原像素大小
     """
     if chars is None:
-        chars = "HdRQA#PXCFJIv?!+^-:. "
+        chars = "HR#PXCFJIv?!+^-:. "
     if not isinstance(chars, str):
         raise TypeError("参数chars的值的数据类型必须是字符串。")
     if len(chars) < 2:
